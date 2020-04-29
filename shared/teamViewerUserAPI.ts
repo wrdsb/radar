@@ -60,7 +60,7 @@ export class teamViewerUserAPI {
     }
     
     // PUT /users/{id}
-    public async update(user: User): Promise<Group | ServerError> {
+    public async update(user: User): Promise<User | ServerError> {
         try {
             const response = await this.api.patch(`/users/${user.id}`);
             const data = response.data;
