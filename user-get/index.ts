@@ -27,7 +27,7 @@ const userGet: AzureFunction = async function (context: Context, triggerMessage:
     const triggerObject = triggerMessage;
     const payload = triggerObject.payload;
 
-    const apiToken = "Bearer " + context.bindings.companyToken;
+    const apiToken = "Bearer " + process.env['companyToken'];
     const apiClient = new teamViewerUserAPI(apiToken);
 
     let result = await apiClient.get(payload);

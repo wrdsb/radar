@@ -27,7 +27,7 @@ const userCreate: AzureFunction = async function (context: Context, triggerMessa
     const triggerObject = triggerMessage;
     const payload = triggerObject.payload;
 
-    const apiToken = "Bearer " + context.bindings.userToken;
+    const apiToken = "Bearer " + process.env['userToken'];
     const apiClient = new teamViewerUserAPI(apiToken);
 
     let result = await apiClient.create(payload);
