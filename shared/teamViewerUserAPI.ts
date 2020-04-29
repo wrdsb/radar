@@ -1,5 +1,5 @@
 import { AxiosError, AxiosRequestConfig } from "axios";
-import { User } from "./teamViewerTypes";
+import { User, UsersListResponse } from "./teamViewerTypes";
 import { teamViewerAPI } from "./teamViewerAPI";
 import { apiConfig } from "./apiConfig";
 import { ServerError } from "./serverError";
@@ -17,8 +17,8 @@ export class teamViewerUserAPI {
     // GET /users
     public async list(): Promise<User[] | ServerError> {
         try {
-            const response = await this.api.get<User[]>('/users');
-            const data = response.data;
+            const response = await this.api.get<UsersListResponse>('/users?full_list=true');
+            const data = response.data.users;
             return data;
         } catch (err) {
             if (err && err.response) {

@@ -15,6 +15,10 @@ interface User {
     language?: string;
 }
 
+interface UsersListResponse {
+    users: User[];
+}
+
 interface UserQuery {
     email?: string;
     name?: string;
@@ -39,3 +43,5 @@ interface GroupQuery {
 interface Device {
     
 }
+
+export { User, UserQuery, UsersListResponse, Group, GroupQuery }
