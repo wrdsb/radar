@@ -1,5 +1,5 @@
 import { AxiosError, AxiosRequestConfig } from "axios";
-import { Group, GroupsListResponse } from "./teamViewerTypes";
+import { Group, GroupsListResponse, UserShare } from "./teamViewerTypes";
 import { teamViewerAPI } from "./teamViewerAPI";
 import { apiConfig } from "./apiConfig";
 import { ServerError } from "./serverError";
@@ -79,6 +79,44 @@ export class teamViewerGroupAPI {
         try {
             const response = await this.api.delete(`/groups/${id}`);
             return true;
+        } catch (err) {
+            if (err && err.response) {
+                const axiosError = err as AxiosError<ServerError>
+                return axiosError.response.data;
+            }
+            throw err;
+        }
+    }
+
+    // POST /groups/{id}/share_group
+    public async share(id: string, shares: UserShare[]): Promise<boolean | ServerError> {
+        let users = {
+            users: shares
+        };
+
+        try {
+            const response = await this.api.post(`/groups/${id}/share_group`, JSON.stringify(users));
+            const data = response.data;
+            return data;
+        } catch (err) {
+            if (err && err.response) {
+                const axiosError = err as AxiosError<ServerError>
+                return axiosError.response.data;
+            }
+            throw err;
+        }
+    }
+
+    // POST /groups/{id}/unshare_group
+    public async unshare(id: string, userIDs: string[]): Promise<boolean | ServerError> {
+        let users = {
+            users: userIDs
+        };
+
+        try {
+            const response = await this.api.post(`/groups/${id}/unshare_group`, JSON.stringify(users));
+            const data = response.data;
+            return data;
         } catch (err) {
             if (err && err.response) {
                 const axiosError = err as AxiosError<ServerError>

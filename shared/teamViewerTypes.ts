@@ -64,6 +64,11 @@ interface GroupsListResponse {
     groups: Group[];
 }
 
+interface UserShare {
+    userid: string;
+    permissions: string;
+}
+
 interface UserQuery {
     email?: string;
     name?: string;
@@ -92,6 +97,7 @@ export {
     GroupUpdatePayload,
     UsersListResponse,
     GroupsListResponse,
+    UserShare,
     UserQuery,
     GroupQuery
 }
