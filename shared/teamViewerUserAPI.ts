@@ -62,7 +62,7 @@ export class teamViewerUserAPI {
     // PUT /users/{id}
     public async update(user: User): Promise<User | ServerError> {
         try {
-            const response = await this.api.patch(`/users/${user.id}`);
+            const response = await this.api.put(`/users/${user.id}`, JSON.stringify(user));
             const data = response.data;
             return data;
         } catch (err) {
@@ -77,7 +77,7 @@ export class teamViewerUserAPI {
     // DELETE /users/{id}
     public async delete(id: string): Promise<boolean | ServerError> {
         try {
-            const response = await this.api.delete(`/user/${id}`);
+            const response = await this.api.delete(`/users/${id}`);
             return true;
         } catch (err) {
             if (err && err.response) {
