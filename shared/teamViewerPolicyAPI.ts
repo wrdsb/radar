@@ -1,5 +1,5 @@
 import { AxiosError, AxiosRequestConfig } from "axios";
-import { } from "./teamViewerTypes";
+import { Policy, PolicyListResponse} from "./teamViewerTypes";
 import { teamViewerAPI } from "./teamViewerAPI";
 import { apiConfig } from "./apiConfig";
 import { ServerError } from "./serverError";
@@ -18,7 +18,7 @@ export class teamViewerPolicyAPI {
     public async list(): Promise<Policy[] | ServerError> {
         try {
             const response = await this.api.get<PolicyListResponse>('/teamviewerpolicies');
-            const data = response.data.users;
+            const data = response.data.policies;
             return data;
         } catch (err) {
             if (err && err.response) {
@@ -45,24 +45,24 @@ export class teamViewerPolicyAPI {
     }
     
     // POST /teamviewerpolicies
-    public async create(policy: Policy): Promise<Policy | ServerError> {
-        try {
-            const response = await this.api.post(`/teamviewerpolicies`, JSON.stringify(policy));
-            const data = response.data;
-            return data;
-        } catch (err) {
-            if (err && err.response) {
-                const axiosError = err as AxiosError<ServerError>
-                return axiosError.response.data;
-            }
-            throw err;
-        }
-    }
+    //public async create(policy: Policy): Promise<Policy | ServerError> {
+        //try {
+            //const response = await this.api.post(`/teamviewerpolicies`, JSON.stringify(policy));
+            //const data = response.data;
+            //return data;
+        //} catch (err) {
+            //if (err && err.response) {
+                //const axiosError = err as AxiosError<ServerError>
+                //return axiosError.response.data;
+            //}
+            //throw err;
+        //}
+    //}
     
     // PUT /teamviewerpolicies/{id}
     public async update(policy: Policy): Promise<Policy | ServerError> {
         try {
-            const response = await this.api.put(`/teamviewerpolicies/${policy.id}`, JSON.stringify(policy));
+            const response = await this.api.put(`/teamviewerpolicies/${policy.policy_id}`, JSON.stringify(policy));
             const data = response.data;
             return data;
         } catch (err) {

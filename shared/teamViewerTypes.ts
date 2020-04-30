@@ -24,6 +24,49 @@ interface Group {
     policy_id?: string;
 }
 
+interface Policy {
+    policy_id?: string;
+    name?: string;
+    settings?: PolicySetting[];
+}
+
+interface PolicySetting {
+    key?: string;
+    value?: string;
+    enforce?: boolean;
+}
+
+interface Contact {
+    contact_id?: string;
+    user_id?: string;
+    name?: string;
+    email?: string;
+    groupid?: string;
+    description?: string;
+    online_state?: string;
+    profilepicture_url?: string;
+    supported_features?: string;
+    invitations?: GroupInvitation[];
+}
+
+interface GroupInvitation {
+    groupId?: string;
+    email?: string;
+}
+
+interface Device {
+    device_id?: string;
+    remotecontrol_id?: string;
+    groupid?: string;
+    alias?: string;
+    description?: string;
+    online_state?: string;
+    supported_features?: string;
+    assigned_to?: boolean;
+    policy_id?: string;
+    last_seen?: string;
+}
+
 interface UserCreatePayload {
     payload: User;
 }
@@ -64,6 +107,18 @@ interface GroupsListResponse {
     groups: Group[];
 }
 
+interface PolicyListResponse {
+    policies: Policy[];
+}
+
+interface ContactsListResponse {
+    contacts: Contact[];
+}
+
+interface DevicesListResponse {
+    devices: Device[];
+}
+
 interface UserShare {
     userid: string;
     permissions: string;
@@ -81,12 +136,12 @@ interface GroupQuery {
     shared?: boolean;
 }
 
-interface Device {
-}
-
 export {
     User,
     Group,
+    Policy,
+    Contact,
+    Device,
     UserCreatePayload,
     UserDeletePayload,
     UserGetPayload,
@@ -97,6 +152,9 @@ export {
     GroupUpdatePayload,
     UsersListResponse,
     GroupsListResponse,
+    PolicyListResponse,
+    ContactsListResponse,
+    DevicesListResponse,
     UserShare,
     UserQuery,
     GroupQuery
