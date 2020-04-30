@@ -27,7 +27,7 @@ const groupGet: AzureFunction = async function (context: Context, triggerMessage
     const triggerObject = triggerMessage;
     const payload = triggerObject.payload;
 
-    const apiToken = "Bearer " + process.env['companyToken'];
+    const apiToken = "Bearer " + process.env['userToken'];
     const apiClient = new teamViewerGroupAPI(apiToken);
 
     let result = await apiClient.get(payload);
