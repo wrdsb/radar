@@ -15,17 +15,6 @@ interface User {
     language?: string;
 }
 
-interface UsersListResponse {
-    users: User[];
-}
-
-interface UserQuery {
-    email?: string;
-    name?: string;
-    permissions?: string[];
-    full_list?: boolean
-}
-
 interface Group {
     id?: string;
     name?: string;
@@ -35,13 +24,74 @@ interface Group {
     policy_id?: string;
 }
 
+interface UserCreatePayload {
+    payload: User;
+}
+
+interface UserDeletePayload {
+    payload: string;
+}
+
+interface UserGetPayload {
+    payload: string;
+}
+
+interface UserUpdatePayload {
+    payload: User
+}
+
+interface GroupCreatePayload {
+    payload: Group;
+}
+
+interface GroupDeletePayload {
+    payload: string;
+}
+
+interface GroupGetPayload {
+    payload: string;
+}
+
+interface GroupUpdatePayload {
+    payload: Group;
+}
+
+interface UsersListResponse {
+    users: User[];
+}
+
+interface GroupsListResponse {
+    groups: Group[];
+}
+
+interface UserQuery {
+    email?: string;
+    name?: string;
+    permissions?: string[];
+    full_list?: boolean
+}
+
 interface GroupQuery {
     name?: string;
     shared?: boolean;
 }
 
 interface Device {
-    
 }
 
-export { User, UserQuery, UsersListResponse, Group, GroupQuery }
+export {
+    User,
+    Group,
+    UserCreatePayload,
+    UserDeletePayload,
+    UserGetPayload,
+    UserUpdatePayload,
+    GroupCreatePayload,
+    GroupDeletePayload,
+    GroupGetPayload,
+    GroupUpdatePayload,
+    UsersListResponse,
+    GroupsListResponse,
+    UserQuery,
+    GroupQuery
+}
