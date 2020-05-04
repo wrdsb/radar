@@ -24,7 +24,7 @@ const userCreate: AzureFunction = async function (context: Context, triggerMessa
         "radar", 
     ];
 
-    const triggerObject = triggerMessage;
+    const triggerObject = context.bindings.triggerMessage;
     const payload = triggerObject.payload;
 
     const apiToken = "Bearer " + process.env['userToken'];

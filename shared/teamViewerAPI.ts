@@ -37,15 +37,15 @@ export class teamViewerAPI {
         return this.api.head(url, config);
     }
 
-    public post<T, R = AxiosResponse<T>> (url: string, data?: string, config?: AxiosRequestConfig): Promise<R> {
+    public post<T, R = AxiosResponse<T>> (url: string, data?, config?: AxiosRequestConfig): Promise<R> {
         return this.api.post(url, data, config);
     }
 
-    public put<T, R = AxiosResponse<T>> (url: string, data?: string, config?: AxiosRequestConfig): Promise<R> {
+    public put<T, R = AxiosResponse<T>> (url: string, data?, config?: AxiosRequestConfig): Promise<R> {
         return this.api.put(url, data, config);
     }
 
-    public patch<T, R = AxiosResponse<T>> (url: string, data?: string, config?: AxiosRequestConfig): Promise<R> {
+    public patch<T, R = AxiosResponse<T>> (url: string, data?, config?: AxiosRequestConfig): Promise<R> {
         return this.api.patch(url, data, config);
     }
 }

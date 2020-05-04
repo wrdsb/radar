@@ -4,7 +4,7 @@ interface User {
     name?: string;
     email?: string;
     password?: string;
-    permissions?: string[];
+    permissions?: string;
     active?: boolean;
     custom_quicksupport_id?: string;
     custom_quickjoin_id?: string;
