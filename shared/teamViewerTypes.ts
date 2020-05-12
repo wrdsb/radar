@@ -1,3 +1,5 @@
+import { ServerError } from "./serverError";
+
 interface User {
     id?: string;
     sso_customer_id?: string;
@@ -71,6 +73,13 @@ interface UserCreatePayload {
     payload: User;
 }
 
+interface UserCreateResponse {
+    code: number;
+    message: string;
+    serverError?: ServerError;
+    user?: User;
+}
+
 interface UserDeletePayload {
     payload: string;
 }
@@ -105,6 +114,13 @@ interface UsersListResponse {
 
 interface GroupsListResponse {
     groups: Group[];
+}
+
+interface GroupCreateResponse {
+    code: number;
+    message: string;
+    serverError?: ServerError;
+    group?: Group;
 }
 
 interface PolicyListResponse {
@@ -143,10 +159,12 @@ export {
     Contact,
     Device,
     UserCreatePayload,
+    UserCreateResponse,
     UserDeletePayload,
     UserGetPayload,
     UserUpdatePayload,
     GroupCreatePayload,
+    GroupCreateResponse,
     GroupDeletePayload,
     GroupGetPayload,
     GroupUpdatePayload,
