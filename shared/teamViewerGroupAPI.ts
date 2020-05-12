@@ -1,5 +1,5 @@
 import { AxiosError, AxiosRequestConfig } from "axios";
-import { Group, GroupsListResponse, UserShare } from "./teamViewerTypes";
+import { Group, GroupsListResponse, UserShare, GroupCreateResponse } from "./teamViewerTypes";
 import { teamViewerAPI } from "./teamViewerAPI";
 import { apiConfig } from "./apiConfig";
 import { ServerError } from "./serverError";
@@ -45,15 +45,25 @@ export class teamViewerGroupAPI {
     }
     
     // POST /groups
-    public async create(group: Group): Promise<Group | ServerError> {
+    public async create(group: Group): Promise<GroupCreateResponse> {
         try {
-            const response = await this.api.post(`/groups`, JSON.stringify(group));
+            const response = await this.api.post(`/groups`, group);
             const data = response.data;
-            return data;
+            const result = {
+                code: 201,
+                message: 'created',
+                group: data
+            }
+            return result;
         } catch (err) {
             if (err && err.response) {
                 const axiosError = err as AxiosError<ServerError>
-                return axiosError.response.data;
+                const result = {
+                    code: 500,
+                    message: 'error',
+                    serverError: axiosError.response.data
+                }
+                return result;
             }
             throw err;
         }
@@ -62,7 +72,7 @@ export class teamViewerGroupAPI {
     // PUT /groups/{id}
     public async update(group: Group): Promise<Group | ServerError> {
         try {
-            const response = await this.api.put(`/groups/${group.id}`, JSON.stringify(group));
+            const response = await this.api.put(`/groups/${group.id}`, group);
             const data = response.data;
             return data;
         } catch (err) {
@@ -95,7 +105,7 @@ export class teamViewerGroupAPI {
         };
 
         try {
-            const response = await this.api.post(`/groups/${id}/share_group`, JSON.stringify(users));
+            const response = await this.api.post(`/groups/${id}/share_group`, users);
             const data = response.data;
             return data;
         } catch (err) {
@@ -114,7 +124,7 @@ export class teamViewerGroupAPI {
         };
 
         try {
-            const response = await this.api.post(`/groups/${id}/unshare_group`, JSON.stringify(users));
+            const response = await this.api.post(`/groups/${id}/unshare_group`, users);
             const data = response.data;
             return data;
         } catch (err) {
