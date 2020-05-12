@@ -28,7 +28,7 @@ const userProvisionUnattended: AzureFunction = async function (context: Context,
 
     const triggerObject = triggerMessage;
     const payload = triggerObject.payload;
-    const result = {
+    let result = {
         userCreate: null,
         createdUser: null,
         groupCreate: null,
@@ -43,7 +43,7 @@ const userProvisionUnattended: AzureFunction = async function (context: Context,
     const contactAPIClient = new teamViewerContactAPI(apiToken);
 
     // create user
-    let user = {
+    const user = {
         name: payload.name,
         email: payload.email,
         permissions: "ShareOwnGroups,EditConnections,ViewOwnConnections",
@@ -63,7 +63,7 @@ const userProvisionUnattended: AzureFunction = async function (context: Context,
 
     // create individual group, with policy attached
     // Devices | Host | email_slug
-    let group = {
+    const group = {
         name: `Devices | Host | ${payload.email.replace('@wrdsb.ca', '')}`,
         policy_id: process.env['unattendedUserGroupPolicyID']
     }
