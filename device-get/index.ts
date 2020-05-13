@@ -30,7 +30,7 @@ const deviceGet: AzureFunction = async function (context: Context, triggerMessag
     const apiToken = "Bearer " + process.env['companyToken'];
     const apiClient = new teamViewerDeviceAPI(apiToken);
 
-    let result = await apiClient.get(payload);
+    let result = await apiClient.getByRemoteControlID(payload);
 
     const logPayload = result;
     context.log(logPayload);
