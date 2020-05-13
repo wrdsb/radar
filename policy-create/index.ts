@@ -30,7 +30,7 @@ const policyCreate: AzureFunction = async function (context: Context, triggerMes
     const apiToken = "Bearer " + process.env['companyToken'];
     const apiClient = new teamViewerPolicyAPI(apiToken);
 
-    let result = await apiClient.create(payload);
+    let result = '';
 
     const logPayload = result;
     context.log(logPayload);
@@ -58,7 +58,7 @@ const policyCreate: AzureFunction = async function (context: Context, triggerMes
     );
     context.bindings.flynnEvent = JSON.stringify(invocationEvent);
     context.log(invocationEvent);
-
+ 
     context.done(null, logBlob);
 };
 
