@@ -30,7 +30,7 @@ const contactGet: AzureFunction = async function (context: Context, triggerMessa
     const apiToken = "Bearer " + process.env['companyToken'];
     const apiClient = new teamViewerContactAPI(apiToken);
 
-    let result = await apiClient.get(payload);
+    let result = await apiClient.getByEmail(payload);
 
     const logPayload = result;
     context.log(logPayload);
