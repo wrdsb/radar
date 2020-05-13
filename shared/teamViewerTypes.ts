@@ -69,6 +69,17 @@ interface Device {
     last_seen?: string;
 }
 
+interface UserGetPayload {
+    payload: string;
+}
+
+interface UserGetResponse {
+    code: number;
+    message: string;
+    serverError?: ServerError;
+    user?: User;
+}
+
 interface UserCreatePayload {
     payload: User;
 }
@@ -80,16 +91,26 @@ interface UserCreateResponse {
     user?: User;
 }
 
+interface UserUpdatePayload {
+    payload: User
+}
+
+interface UserUpdateResponse {
+    code: number;
+    message: string;
+    serverError?: ServerError;
+    user?: User;
+}
+
 interface UserDeletePayload {
     payload: string;
 }
 
-interface UserGetPayload {
-    payload: string;
-}
-
-interface UserUpdatePayload {
-    payload: User
+interface UserDeleteResponse {
+    code: number;
+    message: string;
+    serverError?: ServerError;
+    user?: User;
 }
 
 interface GroupCreatePayload {
