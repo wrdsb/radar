@@ -26,7 +26,7 @@ const userProvisionUnattended: AzureFunction = async function (context: Context,
         "radar", 
     ];
 
-    const triggerObject = triggerMessage;
+    const triggerObject = context.bindings.triggerMessage;
     const payload = triggerObject.payload;
     let result = {
         userCreate: null,
@@ -72,20 +72,20 @@ const userProvisionUnattended: AzureFunction = async function (context: Context,
         result.createdGroup = result.groupCreate.group;
     }
 
-    if (result.createdUser.code === 201 && result.createdGroup.code === 201) {
+    if (result.userCreate.code === 201 && result.groupCreate.code === 201) {
         // share individual group with user
         const userShares = [
             {
-                userid: result.createdUser.user.id,
+                userid: result.createdUser.id,
                 permissions: 'read'
             }
         ]
-        result.groupShare = await groupAPIClient.share(result.createdGroup.group.id, userShares);
+        result.groupShare = await groupAPIClient.share(result.createdGroup.id, userShares);
 
-        // add user as contact to users-unattended-access group
+        // add user as contact to Users | Unattended group
         const contact = {
-            email: result.createdUser.email,
-            groupid: result.createdGroup.id
+            email: payload.email,
+            groupid: process.env['unattendedUserGroupID']
         };
         result.contactCreate = await contactAPIClient.create(contact);
     }
