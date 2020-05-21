@@ -3,8 +3,9 @@ import { createLogObject } from "../shared/createLogObject";
 import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
+import { Group } from "../shared/teamViewerTypes";
 import { teamViewerUserAPI } from "../shared/teamViewerUserAPI";
-import { teamViewerGroupAPI, GroupAPIShareRequest } from "../shared/teamViewerGroupAPI";
+import { teamViewerGroupAPI, GroupAPIShareRequest, GroupAPICreateRequest } from "../shared/teamViewerGroupAPI";
 import { teamViewerContactAPI } from "../shared/teamViewerContactAPI";
 
 const userProvisionUnattended: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
@@ -66,8 +67,14 @@ const userProvisionUnattended: AzureFunction = async function (context: Context,
     const group = {
         name: `Devices | Host | ${payload.email.replace('@wrdsb.ca', '')}`,
         policy_id: process.env['unattendedUserGroupPolicyID']
-    }
-    result.groupCreate = await groupAPIClient.create(group);
+    } as Group;
+
+    const groupCreateRequest = {
+        group: group
+    } as GroupAPICreateRequest;
+
+    result.groupCreate = await groupAPIClient.create(groupCreateRequest);
+
     if (result.groupCreate.code === 201) {
         result.createdGroup = result.groupCreate.group;
     }

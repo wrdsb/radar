@@ -1,5 +1,5 @@
 import { AxiosError, AxiosRequestConfig } from "axios";
-import { Group, GroupsListResponse, UserShare, GroupCreateResponse } from "./teamViewerTypes";
+import { Group, GroupsListResponse, UserShare } from "./teamViewerTypes";
 import { teamViewerAPI } from "./teamViewerAPI";
 import { apiConfig } from "./apiConfig";
 import { ServerError } from "./serverError";
@@ -45,9 +45,9 @@ class teamViewerGroupAPI {
     }
     
     // POST /groups
-    public async create(group: Group): Promise<GroupCreateResponse> {
+    public async create(request: GroupAPICreateRequest): Promise<GroupAPICreateResponse> {
         try {
-            const response = await this.api.post(`/groups`, group);
+            const response = await this.api.post(`/groups`, request.group);
             const data = response.data;
             const result = {
                 code: 201,
@@ -164,6 +164,16 @@ class teamViewerGroupAPI {
     }
 }
 
+interface GroupAPICreateRequest {
+    group: Group;
+}
+interface GroupAPICreateResponse {
+    code: number;
+    message: string;
+    serverError?: ServerError;
+    group?: Group;
+}
+
 interface GroupAPIShareRequest {
     group_id: string;
     user_id: string;
@@ -189,6 +199,8 @@ interface GroupAPIUnshareResponse {
 
 export {
     teamViewerGroupAPI,
+    GroupAPICreateRequest,
+    GroupAPICreateResponse,
     GroupAPIShareRequest,
     GroupAPIShareResponse,
     GroupAPIUnshareRequest,

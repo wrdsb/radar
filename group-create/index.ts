@@ -3,9 +3,10 @@ import { createLogObject } from "../shared/createLogObject";
 import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
-import { teamViewerGroupAPI } from "../shared/teamViewerGroupAPI";
+import { teamViewerGroupAPI, GroupAPICreateRequest } from "../shared/teamViewerGroupAPI";
+import { GroupCreateFunctionRequest, GroupCreateFunctionRequestPayload } from "../shared/types/group-create.types";
 
-const groupCreate: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
+const groupCreate: AzureFunction = async function (context: Context, triggerMessage: GroupCreateFunctionRequest): Promise<void> {
     const functionInvocationID = context.executionContext.invocationId;
     const functionInvocationTime = new Date();
     const functionInvocationTimestamp = functionInvocationTime.toJSON();  // format: 2012-04-23T18:25:43.511Z
@@ -24,13 +25,17 @@ const groupCreate: AzureFunction = async function (context: Context, triggerMess
         "radar", 
     ];
 
-    const triggerObject = triggerMessage;
-    const payload = triggerObject.payload;
-
     const apiToken = "Bearer " + process.env['userToken'];
     const apiClient = new teamViewerGroupAPI(apiToken);
 
-    let result = await apiClient.create(payload);
+    const triggerObject = triggerMessage as GroupCreateFunctionRequest;
+    const payload = triggerObject.payload as GroupCreateFunctionRequestPayload;
+
+    const request = {
+        group: payload.group
+    } as GroupAPICreateRequest;
+
+    let result = await apiClient.create(request);
 
     const logPayload = result;
     context.log(logPayload);
