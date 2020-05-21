@@ -4,7 +4,7 @@ import { teamViewerAPI } from "./teamViewerAPI";
 import { apiConfig } from "./apiConfig";
 import { ServerError } from "./serverError";
 
-export class teamViewerGroupAPI {
+class teamViewerGroupAPI {
     private apiConfig: AxiosRequestConfig;
     private api: teamViewerAPI;
 
@@ -99,40 +99,98 @@ export class teamViewerGroupAPI {
     }
 
     // POST /groups/{id}/share_group
-    public async share(id: string, shares: UserShare[]): Promise<boolean | ServerError> {
-        let users = {
-            users: shares
+    public async share(request: GroupAPIShareRequest): Promise<GroupAPIShareResponse> {
+        let apiRequest = {
+            users: [
+                {
+                    userid: request.user_id,
+                    permissions: request.permission
+                }
+            ]
         };
 
         try {
-            const response = await this.api.post(`/groups/${id}/share_group`, users);
+            const response = await this.api.post(`/groups/${request.group_id}/share_group`, apiRequest);
             const data = response.data;
-            return data;
+            const apiResponse = {
+                code: 200,
+                message: "success",
+                data: data
+            } as GroupAPIShareResponse;
+            return apiResponse;
         } catch (err) {
             if (err && err.response) {
                 const axiosError = err as AxiosError<ServerError>
-                return axiosError.response.data;
+                const apiResponse = {
+                    code: 500,
+                    message: "error",
+                    serverError: axiosError
+                } as GroupAPIShareResponse;
+                return apiResponse;
             }
             throw err;
         }
     }
 
     // POST /groups/{id}/unshare_group
-    public async unshare(id: string, userIDs: string[]): Promise<boolean | ServerError> {
-        let users = {
-            users: userIDs
+    public async unshare(request: GroupAPIUnshareRequest): Promise<GroupAPIUnshareResponse> {
+        let apiRequest = {
+            users: [
+                request.user_id
+            ]
         };
 
         try {
-            const response = await this.api.post(`/groups/${id}/unshare_group`, users);
+            const response = await this.api.post(`/groups/${request.group_id}/unshare_group`, apiRequest);
             const data = response.data;
-            return data;
+            const apiResponse = {
+                code: 200,
+                message: "success",
+                data: data
+            } as GroupAPIUnshareResponse;
+            return apiResponse;
         } catch (err) {
             if (err && err.response) {
                 const axiosError = err as AxiosError<ServerError>
-                return axiosError.response.data;
+                const apiResponse = {
+                    code: 500,
+                    message: "error",
+                    serverError: axiosError
+                } as GroupAPIShareResponse;
+                return apiResponse;
             }
             throw err;
         }
     }
+}
+
+interface GroupAPIShareRequest {
+    group_id: string;
+    user_id: string;
+    permission: string;
+}
+interface GroupAPIShareResponse {
+    code: number;
+    message: string;
+    serverError?: ServerError;
+    data?: any;
+}
+
+interface GroupAPIUnshareRequest {
+    group_id: string;
+    user_id: string;
+}
+interface GroupAPIUnshareResponse {
+    code: number;
+    message: string;
+    serverError?: ServerError;
+    data?: any;
+}
+
+export {
+    teamViewerGroupAPI,
+    GroupAPIShareRequest,
+    GroupAPIShareResponse,
+    GroupAPIUnshareRequest,
+    GroupAPIUnshareResponse
 }
