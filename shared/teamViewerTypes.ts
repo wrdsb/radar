@@ -144,17 +144,6 @@ interface GroupGetPayload {
     payload: string;
 }
 
-interface GroupCreatePayload {
-    payload: Group;
-}
-
-interface GroupCreateResponse {
-    code: number;
-    message: string;
-    serverError?: ServerError;
-    group?: Group;
-}
-
 interface GroupUpdatePayload {
     payload: Group;
 }
@@ -189,8 +178,6 @@ export {
     UserDeletePayload,
     UserGetPayload,
     UserUpdatePayload,
-    GroupCreatePayload,
-    GroupCreateResponse,
     GroupDeletePayload,
     GroupGetPayload,
     GroupUpdatePayload,
