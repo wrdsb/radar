@@ -4,7 +4,7 @@ import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
 import { teamViewerUserAPI } from "../shared/teamViewerUserAPI";
-import { teamViewerGroupAPI } from "../shared/teamViewerGroupAPI";
+import { teamViewerGroupAPI, GroupAPIShareRequest } from "../shared/teamViewerGroupAPI";
 import { teamViewerContactAPI } from "../shared/teamViewerContactAPI";
 
 const userProvisionUnattended: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
@@ -74,13 +74,13 @@ const userProvisionUnattended: AzureFunction = async function (context: Context,
 
     if (result.userCreate.code === 201 && result.groupCreate.code === 201) {
         // share individual group with user
-        const userShares = [
-            {
-                userid: result.createdUser.id,
-                permissions: 'read'
-            }
-        ]
-        result.groupShare = await groupAPIClient.share(result.createdGroup.id, userShares);
+        const request = {
+            group_id: result.createdGroup.id,
+            user_id: result.createdUser.id,
+            permission: 'read'
+        } as GroupAPIShareRequest;
+
+        result.groupShare = await groupAPIClient.share(request);
 
         // add user as contact to Users | Unattended group
         const contact = {
