@@ -3,12 +3,13 @@ import { createLogObject } from "../shared/createLogObject";
 import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
-import { Group } from "../shared/teamViewerTypes";
+import { User, Group } from "../shared/teamViewerTypes";
+import { UserProvisionUnattendedFunctionRequest, UserProvisionUnattendedFunctionRequestPayload, UserProvisionUnattendedFunctionResponsePayload } from "../shared/types/user-provision-unattended.types";
 import { teamViewerUserAPI } from "../shared/teamViewerUserAPI";
 import { teamViewerGroupAPI, GroupAPIShareRequest, GroupAPICreateRequest } from "../shared/teamViewerGroupAPI";
 import { teamViewerContactAPI } from "../shared/teamViewerContactAPI";
 
-const userProvisionUnattended: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
+const userProvisionUnattended: AzureFunction = async function (context: Context, triggerMessage: UserProvisionUnattendedFunctionRequest): Promise<void> {
     const functionInvocationID = context.executionContext.invocationId;
     const functionInvocationTime = new Date();
     const functionInvocationTimestamp = functionInvocationTime.toJSON();  // format: 2012-04-23T18:25:43.511Z
@@ -27,8 +28,14 @@ const userProvisionUnattended: AzureFunction = async function (context: Context,
         "radar", 
     ];
 
-    const triggerObject = context.bindings.triggerMessage;
-    const payload = triggerObject.payload;
+    const apiToken = "Bearer " + process.env['userToken'];
+    const userAPIClient = new teamViewerUserAPI(apiToken);
+    const groupAPIClient = new teamViewerGroupAPI(apiToken);
+    const contactAPIClient = new teamViewerContactAPI(apiToken);
+
+    const triggerObject = triggerMessage as UserProvisionUnattendedFunctionRequest;
+    const payload = triggerObject.payload as UserProvisionUnattendedFunctionRequestPayload;
+
     let result = {
         userCreate: null,
         createdUser: null,
@@ -36,12 +43,7 @@ const userProvisionUnattended: AzureFunction = async function (context: Context,
         createdGroup: null,
         groupShare: null,
         contactCreate: null
-    };
-
-    const apiToken = "Bearer " + process.env['userToken'];
-    const userAPIClient = new teamViewerUserAPI(apiToken);
-    const groupAPIClient = new teamViewerGroupAPI(apiToken);
-    const contactAPIClient = new teamViewerContactAPI(apiToken);
+    } as UserProvisionUnattendedFunctionResponsePayload;
 
     // create user
     const user = {
@@ -56,8 +58,10 @@ const userProvisionUnattended: AzureFunction = async function (context: Context,
         activated_license_id: process.env['activatedLicenseID'],
         activated_license_name: process.env['activatedLicenseName'],
         activated_subLicense_name: process.env['activatedSubLicenseName']
-    };
+    } as User;
+
     result.userCreate = await userAPIClient.create(user);
+
     if (result.userCreate.code === 201) {
         result.createdUser = result.userCreate.user;
     }
