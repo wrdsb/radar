@@ -3,9 +3,10 @@ import { createLogObject } from "../shared/createLogObject";
 import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
-import { teamViewerGroupAPI } from "../shared/teamViewerGroupAPI";
+import { teamViewerGroupAPI, GroupAPIUnshareRequest } from "../shared/teamViewerGroupAPI";
+import { GroupUnshareFunctionRequest, GroupUnshareFunctionRequestPayload } from "../shared/types/group-unshare.types";
 
-const groupUnshare: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
+const groupUnshare: AzureFunction = async function (context: Context, triggerMessage: GroupUnshareFunctionRequest): Promise<void> {
     const functionInvocationID = context.executionContext.invocationId;
     const functionInvocationTime = new Date();
     const functionInvocationTimestamp = functionInvocationTime.toJSON();  // format: 2012-04-23T18:25:43.511Z
@@ -24,13 +25,18 @@ const groupUnshare: AzureFunction = async function (context: Context, triggerMes
         "radar", 
     ];
 
-    const triggerObject = triggerMessage;
-    const payload = triggerObject.payload;
-
     const apiToken = "Bearer " + process.env['userToken'];
     const apiClient = new teamViewerGroupAPI(apiToken);
 
-    let result = await apiClient.get(payload);
+    const triggerObject = triggerMessage as GroupUnshareFunctionRequest;
+    const payload = triggerObject.payload as GroupUnshareFunctionRequestPayload;
+
+    const request = {
+        group_id: payload.group_id,
+        user_id: payload.user_id
+    } as GroupAPIUnshareRequest;
+
+    let result = await apiClient.unshare(request);
 
     const logPayload = result;
     context.log(logPayload);
