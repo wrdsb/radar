@@ -3,7 +3,7 @@ import { createLogObject } from "../shared/createLogObject";
 import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
-import { teamViewerGroupAPI } from "../shared/teamViewerGroupAPI";
+import { teamViewerGroupAPI, GroupAPIShareRequest } from "../shared/teamViewerGroupAPI";
 import { GroupShareFunctionRequest, GroupShareFunctionRequestPayload } from "../shared/types/group-share.types";
 
 const groupShare: AzureFunction = async function (context: Context, triggerMessage: GroupShareFunctionRequest): Promise<void> {
@@ -25,20 +25,19 @@ const groupShare: AzureFunction = async function (context: Context, triggerMessa
         "radar", 
     ];
 
-    const triggerObject = triggerMessage as GroupShareFunctionRequest;
-    const payload = triggerObject.payload as GroupShareFunctionRequestPayload;
-
     const apiToken = "Bearer " + process.env['userToken'];
     const apiClient = new teamViewerGroupAPI(apiToken);
 
-    const userShares = [
-        {
-            userid: payload.user_id,
-            permissions: 'read'
-        }
-    ]
+    const triggerObject = triggerMessage as GroupShareFunctionRequest;
+    const payload = triggerObject.payload as GroupShareFunctionRequestPayload;
 
-    let result = await apiClient.share(payload.group_id, userShares);
+    const request = {
+        group_id: payload.group_id,
+        user_id: payload.user_id,
+        permission: 'read'
+    } as GroupAPIShareRequest;
+    
+    let result = await apiClient.share(request);
 
     const logPayload = result;
     context.log(logPayload);
