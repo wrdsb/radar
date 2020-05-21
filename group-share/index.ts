@@ -4,8 +4,9 @@ import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
 import { teamViewerGroupAPI } from "../shared/teamViewerGroupAPI";
+import { GroupShareFunctionRequest, GroupShareFunctionRequestPayload } from "../shared/types/group-share.types";
 
-const groupShare: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
+const groupShare: AzureFunction = async function (context: Context, triggerMessage: GroupShareFunctionRequest): Promise<void> {
     const functionInvocationID = context.executionContext.invocationId;
     const functionInvocationTime = new Date();
     const functionInvocationTimestamp = functionInvocationTime.toJSON();  // format: 2012-04-23T18:25:43.511Z
@@ -24,13 +25,20 @@ const groupShare: AzureFunction = async function (context: Context, triggerMessa
         "radar", 
     ];
 
-    const triggerObject = triggerMessage;
-    const payload = triggerObject.payload;
+    const triggerObject = triggerMessage as GroupShareFunctionRequest;
+    const payload = triggerObject.payload as GroupShareFunctionRequestPayload;
 
     const apiToken = "Bearer " + process.env['userToken'];
     const apiClient = new teamViewerGroupAPI(apiToken);
 
-    let result = await apiClient.get(payload);
+    const userShares = [
+        {
+            userid: payload.user_id,
+            permissions: 'read'
+        }
+    ]
+
+    let result = await apiClient.share(payload.group_id, userShares);
 
     const logPayload = result;
     context.log(logPayload);
