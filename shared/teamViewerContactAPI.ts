@@ -92,7 +92,7 @@ export class teamViewerContactAPI {
     // POST /contacts
     public async create(contact: Contact): Promise<Contact | ServerError> {
         try {
-            const response = await this.api.post(`/contacts`, JSON.stringify(contact));
+            const response = await this.api.post(`/contacts`, contact);
             const data = response.data;
             return data;
         } catch (err) {

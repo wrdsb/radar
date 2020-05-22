@@ -27,7 +27,7 @@ const contactCreate: AzureFunction = async function (context: Context, triggerMe
     const triggerObject = triggerMessage;
     const payload = triggerObject.payload;
 
-    const apiToken = "Bearer " + process.env['companyToken'];
+    const apiToken = "Bearer " + process.env['userToken'];
     const apiClient = new teamViewerContactAPI(apiToken);
 
     let result = await apiClient.create(payload);
