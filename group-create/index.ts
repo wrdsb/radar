@@ -37,6 +37,8 @@ const groupCreate: AzureFunction = async function (context: Context, triggerMess
 
     let result = await apiClient.create(request);
 
+    context.bindings.cosmosDocument = result.group;
+
     const logPayload = result;
     context.log(logPayload);
 
