@@ -44,7 +44,7 @@ const usersProvisionMultipleExistingGroups: AzureFunction = async function (cont
     payload.forEach(user => {
         let message = {
             payload: {
-                name: user.full_name,
+                name: user.name,
                 email: user.email,
                 group: sortedGroups[user.email.replace('@wrdsb.ca', '')]
             }
