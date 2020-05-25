@@ -4,11 +4,12 @@ import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
 import { User, Group } from "../shared/teamViewerTypes";
+import { UserProvisionUnattendedExistingGroupFunctionRequest, UserProvisionUnattendedExistingGroupFunctionRequestPayload, UserProvisionUnattendedExistingGroupFunctionResponsePayload } from "../shared/types/user-provision-unattended-existing-group.types";
 import { teamViewerUserAPI } from "../shared/teamViewerUserAPI";
 import { teamViewerGroupAPI, GroupAPIShareRequest, GroupAPICreateRequest } from "../shared/teamViewerGroupAPI";
 import { teamViewerContactAPI } from "../shared/teamViewerContactAPI";
 
-const userProvisionUnattendedExistingGroup: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
+const userProvisionUnattendedExistingGroup: AzureFunction = async function (context: Context, triggerMessage: UserProvisionUnattendedExistingGroupFunctionRequest): Promise<void> {
     const functionInvocationID = context.executionContext.invocationId;
     const functionInvocationTime = new Date();
     const functionInvocationTimestamp = functionInvocationTime.toJSON();  // format: 2012-04-23T18:25:43.511Z
@@ -32,8 +33,8 @@ const userProvisionUnattendedExistingGroup: AzureFunction = async function (cont
     const groupAPIClient = new teamViewerGroupAPI(apiToken);
     const contactAPIClient = new teamViewerContactAPI(apiToken);
 
-    const triggerObject = triggerMessage;
-    const payload = triggerObject.payload;
+    const triggerObject = triggerMessage as UserProvisionUnattendedExistingGroupFunctionRequest;
+    const payload = triggerObject.payload as UserProvisionUnattendedExistingGroupFunctionRequestPayload;
     const sharedGroup = payload.group as Group;
 
     let result = {
@@ -42,7 +43,7 @@ const userProvisionUnattendedExistingGroup: AzureFunction = async function (cont
         sharedGroup: sharedGroup,
         groupShare: null,
         contactCreate: null
-    };
+    } as UserProvisionUnattendedExistingGroupFunctionResponsePayload;
 
     // create user
     const user = {
