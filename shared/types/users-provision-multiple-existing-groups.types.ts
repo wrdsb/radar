@@ -1,0 +1,30 @@
+import { UserProvisionUnattendedExistingGroupFunctionRequestPayload } from "./user-provision-unattended-existing-group.types";
+
+interface UsersProvisionMultipleExistingGroupsFunctionRequest {
+    readonly payload: UsersProvisionMultipleExistingGroupsFunctionRequestPayload;
+}
+
+interface UsersProvisionMultipleExistingGroupsFunctionResponse {}
+interface UsersProvisionMultipleExistingGroupsFunctionLogObject {}
+interface UsersProvisionMultipleExistingGroupsFunctionCallbackMessage {}
+interface UsersProvisionMultipleExistingGroupsFunctionInvocationEvent {}
+
+type UsersProvisionMultipleExistingGroupsFunctionRequestPayload = UserProvisionUnattendedExistingGroupFunctionRequestPayload[]
+
+interface UsersProvisionMultipleExistingGroupsFunctionResponsePayload {}
+interface UsersProvisionMultipleExistingGroupsFunctionLogObjectPayload {}
+interface UsersProvisionMultipleExistingGroupsFunctionCallbackMessagePayload {}
+interface UsersProvisionMultipleExistingGroupsFunctionInvocationEventPayload {}
+
+export {
+    UsersProvisionMultipleExistingGroupsFunctionRequest,
+    UsersProvisionMultipleExistingGroupsFunctionResponse,
+    UsersProvisionMultipleExistingGroupsFunctionLogObject,
+    UsersProvisionMultipleExistingGroupsFunctionCallbackMessage,
+    UsersProvisionMultipleExistingGroupsFunctionInvocationEvent,
+    UsersProvisionMultipleExistingGroupsFunctionRequestPayload,
+    UsersProvisionMultipleExistingGroupsFunctionResponsePayload,
+    UsersProvisionMultipleExistingGroupsFunctionLogObjectPayload,
+    UsersProvisionMultipleExistingGroupsFunctionCallbackMessagePayload,
+    UsersProvisionMultipleExistingGroupsFunctionInvocationEventPayload
+}

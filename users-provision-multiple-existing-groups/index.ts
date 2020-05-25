@@ -1,12 +1,13 @@
 import { AzureFunction, Context } from "@azure/functions"
-import { CosmosClient } from "@azure/cosmos";
 import { createLogObject } from "../shared/createLogObject";
 import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
-import { UserProvisionUnattendedExistingGroupFunctionRequestPayload } from "../shared/types/user-provision-unattended-existing-group.types";
+import { User, Group } from "../shared/teamViewerTypes";
+import { UsersProvisionMultipleExistingGroupsFunctionRequest, UsersProvisionMultipleExistingGroupsFunctionRequestPayload } from "../shared/types/users-provision-multiple-existing-groups.types";
+import { UserProvisionUnattendedExistingGroupFunctionRequest, UserProvisionUnattendedExistingGroupFunctionRequestPayload } from "../shared/types/user-provision-unattended-existing-group.types";
 
-const usersProvisionMultipleExistingGroups: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
+const usersProvisionMultipleExistingGroups: AzureFunction = async function (context: Context, triggerMessage: UsersProvisionMultipleExistingGroupsFunctionRequest): Promise<void> {
     const functionInvocationID = context.executionContext.invocationId;
     const functionInvocationTime = new Date();
     const functionInvocationTimestamp = functionInvocationTime.toJSON();  // format: 2012-04-23T18:25:43.511Z
@@ -27,22 +28,23 @@ const usersProvisionMultipleExistingGroups: AzureFunction = async function (cont
 
     const allGroups = context.bindings.allGroups;
 
-    const triggerObject = triggerMessage;
-    const payload = triggerObject.payload;
+    const triggerObject = triggerMessage as UsersProvisionMultipleExistingGroupsFunctionRequest;
+    const payload = triggerObject.payload as UsersProvisionMultipleExistingGroupsFunctionRequestPayload;
 
     let sortedGroups = {};
     let queueMessages = [];
 
-    allGroups.forEach(group => {
+    allGroups.forEach((group: Group) => {
         const key = group.name.replace('Devices | Host | ', '');
+
         sortedGroups[key] = {
             id: group.id,
             name: group.name,
             permissions: group.permissions
-        }
+        } as Group;
     });
 
-    payload.forEach(user => {
+    payload.forEach((user: User) => {
         let messagePayload = {
             name: user.name,
             email: user.email,
@@ -51,7 +53,7 @@ const usersProvisionMultipleExistingGroups: AzureFunction = async function (cont
 
         let message = {
             payload: messagePayload
-        }
+        } as UserProvisionUnattendedExistingGroupFunctionRequest;
         
         context.log(message);
         queueMessages.push(message);
