@@ -4,8 +4,9 @@ import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
 import { teamViewerUserAPI } from "../shared/teamViewerUserAPI";
+import { UsersListFunctionRequest, UsersListFunctionRequestPayload } from "../shared/types/users-list.types";
 
-const usersList: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
+const usersList: AzureFunction = async function (context: Context, triggerMessage: UsersListFunctionRequest): Promise<void> {
     const functionInvocationID = context.executionContext.invocationId;
     const functionInvocationTime = new Date();
     const functionInvocationTimestamp = functionInvocationTime.toJSON();  // format: 2012-04-23T18:25:43.511Z
@@ -24,11 +25,11 @@ const usersList: AzureFunction = async function (context: Context, triggerMessag
         "radar", 
     ];
 
-    const triggerObject = triggerMessage;
-    const payload = triggerObject.payload;
-
     const apiToken = "Bearer " + process.env['companyToken'];
     const apiClient = new teamViewerUserAPI(apiToken);
+
+    const triggerObject = triggerMessage as UsersListFunctionRequest;
+    const payload = triggerObject.payload as UsersListFunctionRequestPayload;
 
     let result = await apiClient.list();
 
