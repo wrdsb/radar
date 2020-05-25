@@ -3,7 +3,6 @@ import { createLogObject } from "../shared/createLogObject";
 import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
-import { teamViewerUserAPI } from "../shared/teamViewerUserAPI";
 
 const usersProvisionMultiple: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
     const functionInvocationID = context.executionContext.invocationId;
@@ -27,12 +26,25 @@ const usersProvisionMultiple: AzureFunction = async function (context: Context, 
     const triggerObject = triggerMessage;
     const payload = triggerObject.payload;
 
-    const apiToken = "Bearer " + process.env['companyToken'];
-    const apiClient = new teamViewerUserAPI(apiToken);
+    let queueMessages = [];
 
-    let result = await apiClient.get(payload);
+    payload.forEach(user => {
+        let message = {
+            payload: {
+                group: {
+                    name: `Devices | Host | ${user.email.replace('@wrdsb.ca', '')}`,
+                    policy_id: process.env['unattendedUserGroupPolicyID']
+                }
+            }
+        };
+        queueMessages.push(message);
+    });
 
-    const logPayload = result;
+    context.bindings.groupCreateQueue = JSON.stringify(queueMessages);
+
+    const logPayload = {
+        queueMessages: queueMessages
+    }
     context.log(logPayload);
 
     const logObject = await createLogObject(functionInvocationID, functionInvocationTime, functionName, logPayload);
