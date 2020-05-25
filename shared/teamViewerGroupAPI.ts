@@ -53,7 +53,7 @@ class teamViewerGroupAPI {
                 code: 201,
                 message: 'created',
                 group: data
-            }
+            } as GroupAPICreateResponse;
             return result;
         } catch (err) {
             if (err && err.response) {
@@ -62,7 +62,7 @@ class teamViewerGroupAPI {
                     code: 500,
                     message: 'error',
                     serverError: axiosError.response.data
-                }
+                } as GroupAPICreateResponse;
                 return result;
             }
             throw err;
