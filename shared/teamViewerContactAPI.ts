@@ -4,7 +4,7 @@ import { teamViewerAPI } from "./teamViewerAPI";
 import { apiConfig } from "./apiConfig";
 import { ServerError } from "./serverError";
 
-export class teamViewerContactAPI {
+class teamViewerContactAPI {
     private apiConfig: AxiosRequestConfig;
     private api: teamViewerAPI;
 
@@ -90,15 +90,25 @@ export class teamViewerContactAPI {
     }
 
     // POST /contacts
-    public async create(contact: Contact): Promise<Contact | ServerError> {
+    public async create(request: ContactAPICreateRequest): Promise<ContactAPICreateResponse> {
         try {
-            const response = await this.api.post(`/contacts`, contact);
+            const response = await this.api.post(`/contacts`, request.contact);
             const data = response.data;
-            return data;
+            const result = {
+                code: 201,
+                message: 'created',
+                contact: data
+            } as ContactAPICreateResponse;
+            return result;
         } catch (err) {
             if (err && err.response) {
                 const axiosError = err as AxiosError<ServerError>
-                return axiosError.response.data;
+                const result = {
+                    code: 500,
+                    message: 'error',
+                    serverError: axiosError.response.data
+                } as ContactAPICreateResponse;
+                return result;
             }
             throw err;
         }
@@ -132,4 +142,20 @@ export class teamViewerContactAPI {
             throw err;
         }
     }
+}
+
+interface ContactAPICreateRequest {
+    contact: Contact;
+}
+interface ContactAPICreateResponse {
+    code: number;
+    message: string;
+    serverError?: ServerError;
+    contact?: Contact;
+}
+
+export {
+    teamViewerContactAPI,
+    ContactAPICreateRequest,
+    ContactAPICreateResponse
 }

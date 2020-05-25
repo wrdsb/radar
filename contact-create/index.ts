@@ -4,8 +4,10 @@ import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
 import { teamViewerContactAPI } from "../shared/teamViewerContactAPI";
+import { ContactAPICreateRequest } from "../shared/teamViewerContactAPI";
+import { ContactCreateFunctionRequest, ContactCreateFunctionRequestPayload } from "../shared/types/contact-create.types";
 
-const contactCreate: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
+const contactCreate: AzureFunction = async function (context: Context, triggerMessage: ContactCreateFunctionRequest): Promise<void> {
     const functionInvocationID = context.executionContext.invocationId;
     const functionInvocationTime = new Date();
     const functionInvocationTimestamp = functionInvocationTime.toJSON();  // format: 2012-04-23T18:25:43.511Z
@@ -24,13 +26,17 @@ const contactCreate: AzureFunction = async function (context: Context, triggerMe
         "radar", 
     ];
 
-    const triggerObject = triggerMessage;
-    const payload = triggerObject.payload;
-
     const apiToken = "Bearer " + process.env['userToken'];
     const apiClient = new teamViewerContactAPI(apiToken);
 
-    let result = await apiClient.create(payload);
+    const triggerObject = triggerMessage as ContactCreateFunctionRequest;
+    const payload = triggerObject.payload as ContactCreateFunctionRequestPayload;
+
+    const request = {
+        contact: payload.contact
+    } as ContactAPICreateRequest;
+
+    let result = await apiClient.create(request);
 
     const logPayload = result;
     context.log(logPayload);
