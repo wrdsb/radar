@@ -31,16 +31,15 @@ const usersProvisionMultiple: AzureFunction = async function (context: Context, 
     payload.forEach(user => {
         let message = {
             payload: {
-                group: {
-                    name: `Devices | Host | ${user.email.replace('@wrdsb.ca', '')}`,
-                    policy_id: process.env['unattendedUserGroupPolicyID']
-                }
+                name: user.name,
+                email: user.email
             }
         };
+        context.log(message);
         queueMessages.push(message);
     });
 
-    context.bindings.groupCreateQueue = JSON.stringify(queueMessages);
+    context.bindings.userProvisionQueue = JSON.stringify(queueMessages);
 
     const logPayload = {
         queueMessages: queueMessages
