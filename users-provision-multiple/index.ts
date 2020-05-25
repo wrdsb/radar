@@ -3,9 +3,11 @@ import { createLogObject } from "../shared/createLogObject";
 import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
-import { UserProvisionUnattendedFunctionRequestPayload } from "../shared/types/user-provision-unattended.types";
+import { User } from "../shared/teamViewerTypes";
+import { UsersProvisionMultipleFunctionRequest, UsersProvisionMultipleFunctionRequestPayload } from "../shared/types/users-provision-multiple.types";
+import { UserProvisionUnattendedFunctionRequest, UserProvisionUnattendedFunctionRequestPayload } from "../shared/types/user-provision-unattended.types";
 
-const usersProvisionMultiple: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
+const usersProvisionMultiple: AzureFunction = async function (context: Context, triggerMessage: UsersProvisionMultipleFunctionRequest): Promise<void> {
     const functionInvocationID = context.executionContext.invocationId;
     const functionInvocationTime = new Date();
     const functionInvocationTimestamp = functionInvocationTime.toJSON();  // format: 2012-04-23T18:25:43.511Z
@@ -24,12 +26,12 @@ const usersProvisionMultiple: AzureFunction = async function (context: Context, 
         "radar", 
     ];
 
-    const triggerObject = triggerMessage;
-    const payload = triggerObject.payload;
+    const triggerObject = triggerMessage as UsersProvisionMultipleFunctionRequest;
+    const payload = triggerObject.payload as UsersProvisionMultipleFunctionRequestPayload;
 
     let queueMessages = [];
 
-    payload.forEach(user => {
+    payload.forEach((user: User) => {
         let messagePayload = {
             name: user.name,
             email: user.email
@@ -37,7 +39,7 @@ const usersProvisionMultiple: AzureFunction = async function (context: Context, 
 
         let message = {
             payload: messagePayload
-        };
+        } as UserProvisionUnattendedFunctionRequest;
 
         context.log(message);
         queueMessages.push(message);
