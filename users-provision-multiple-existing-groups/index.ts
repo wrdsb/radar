@@ -4,6 +4,7 @@ import { createLogObject } from "../shared/createLogObject";
 import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
+import { UserProvisionUnattendedExistingGroupFunctionRequestPayload } from "../shared/types/user-provision-unattended-existing-group.types";
 
 const usersProvisionMultipleExistingGroups: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
     const functionInvocationID = context.executionContext.invocationId;
@@ -42,13 +43,16 @@ const usersProvisionMultipleExistingGroups: AzureFunction = async function (cont
     });
 
     payload.forEach(user => {
+        let messagePayload = {
+            name: user.name,
+            email: user.email,
+            group: sortedGroups[user.email.replace('@wrdsb.ca', '')]
+        } as UserProvisionUnattendedExistingGroupFunctionRequestPayload;
+
         let message = {
-            payload: {
-                name: user.name,
-                email: user.email,
-                group: sortedGroups[user.email.replace('@wrdsb.ca', '')]
-            }
+            payload: messagePayload
         }
+        
         context.log(message);
         queueMessages.push(message);
     });

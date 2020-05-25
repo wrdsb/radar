@@ -3,6 +3,7 @@ import { createLogObject } from "../shared/createLogObject";
 import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
+import { UserProvisionUnattendedFunctionRequestPayload } from "../shared/types/user-provision-unattended.types";
 
 const usersProvisionMultiple: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
     const functionInvocationID = context.executionContext.invocationId;
@@ -29,12 +30,15 @@ const usersProvisionMultiple: AzureFunction = async function (context: Context, 
     let queueMessages = [];
 
     payload.forEach(user => {
+        let messagePayload = {
+            name: user.name,
+            email: user.email
+        } as UserProvisionUnattendedFunctionRequestPayload;
+
         let message = {
-            payload: {
-                name: user.name,
-                email: user.email
-            }
+            payload: messagePayload
         };
+
         context.log(message);
         queueMessages.push(message);
     });
