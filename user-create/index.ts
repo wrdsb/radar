@@ -24,13 +24,17 @@ const userCreate: AzureFunction = async function (context: Context, triggerMessa
         "radar", 
     ];
 
-    const triggerObject = context.bindings.triggerMessage;
-    const payload = triggerObject.payload;
-
     const apiToken = "Bearer " + process.env['userToken'];
     const apiClient = new teamViewerUserAPI(apiToken);
 
-    let result = await apiClient.create(payload);
+    const triggerObject = context.bindings.triggerMessage;
+    const payload = triggerObject.payload;
+
+    const request = payload;
+
+    let result = await apiClient.create(request);
+
+    context.bindings.cosmosDocument = result.user;
 
     const logPayload = result;
     context.log(logPayload);

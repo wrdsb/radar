@@ -8,6 +8,15 @@
             "direction": "in"
         },
         {
+            "name": "cosmosDocument",
+            "type": "cosmosDB",
+            "databaseName": "radar",
+            "collectionName": "users",
+            "createIfNotExists": true,
+            "connectionStringSetting": "wrdsbradar_COSMOSDB",
+            "direction": "out"
+        },
+        {
             "name": "callbackMessage",
             "type": "queue",
             "queueName": "callbacks",
