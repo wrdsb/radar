@@ -5,7 +5,6 @@ import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
 import { User, Group, Contact } from "../shared/teamViewerTypes";
 import { UserProvisionFunctionRequest, UserProvisionFunctionRequestPayload, UserProvisionFunctionResponsePayload } from "../shared/types/user-provision.types";
-import { teamViewerUserAPI } from "../shared/teamViewerUserAPI";
 import { teamViewerGroupAPI, GroupAPIShareRequest, GroupAPICreateRequest } from "../shared/teamViewerGroupAPI";
 import { teamViewerContactAPI, ContactAPICreateRequest } from "../shared/teamViewerContactAPI";
 
@@ -15,13 +14,13 @@ const userProvision: AzureFunction = async function (context: Context, triggerMe
     const functionInvocationTimestamp = functionInvocationTime.toJSON();  // format: 2012-04-23T18:25:43.511Z
 
     const functionName = context.executionContext.functionName;
-    const functionEventType = 'WRDSB.RADAR.User.Unattended.Provision.ExistingGroup';
+    const functionEventType = 'WRDSB.RADAR.User.Provision';
     const functionEventID = `radar-functions-${functionName}-${functionInvocationID}`;
     const functionLogID = `${functionInvocationTime.getTime()}-${functionInvocationID}`;
 
     const logStorageAccount = process.env['storageAccount'];
     const logStorageKey = process.env['storageKey'];
-    const logStorageContainer = 'function-user-provision-unattended-existing-group-logs';
+    const logStorageContainer = 'function-user-provision-logs';
 
     const eventLabel = '';
     const eventTags = [
@@ -55,7 +54,7 @@ const userProvision: AzureFunction = async function (context: Context, triggerMe
 
     // add user as contact to Users | Unattended group
     const contact = {
-        email: payload.email,
+        email: result.provisionedUser.email,
         groupid: process.env['unattendedUserGroupID']
     } as Contact;
 
