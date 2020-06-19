@@ -4,6 +4,7 @@ import { storeLogBlob } from "../shared/storeLogBlob";
 import { createCallbackMessage } from "../shared/createCallbackMessage";
 import { createEvent } from "../shared/createEvent";
 import { teamViewerUserAPI } from "../shared/teamViewerUserAPI";
+import {  } from "module";
 
 const userUpdate: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
     const functionInvocationID = context.executionContext.invocationId;
@@ -24,11 +25,11 @@ const userUpdate: AzureFunction = async function (context: Context, triggerMessa
         "radar", 
     ];
 
-    const triggerObject = context.bindings.triggerMessage;
-    const payload = triggerObject.payload;
-
     const apiToken = "Bearer " + process.env['userToken'];
     const apiClient = new teamViewerUserAPI(apiToken);
+
+    const triggerObject = context.bindings.triggerMessage;
+    const payload = triggerObject.payload;
 
     let result = await apiClient.update(payload);
 
