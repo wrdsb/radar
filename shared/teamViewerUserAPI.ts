@@ -4,7 +4,7 @@ import { teamViewerAPI } from "./teamViewerAPI";
 import { apiConfig } from "./apiConfig";
 import { ServerError } from "./serverError";
 
-export class teamViewerUserAPI {
+class teamViewerUserAPI {
     private apiConfig: AxiosRequestConfig;
     private api: teamViewerAPI;
 
@@ -70,7 +70,7 @@ export class teamViewerUserAPI {
     }
     
     // PUT /users/{id}
-    public async update(user: User): Promise<User | ServerError> {
+    public async update(user: User): Promise<UserAPIUpdateResponse> {
         try {
             const response = await this.api.put(`/users/${user.id}`, user);
             const data = response.data;
@@ -83,4 +83,54 @@ export class teamViewerUserAPI {
             throw err;
         }
     }
+}
+
+type UserAPIListRequest = {}
+interface UserAPIListResponse {
+    code: number;
+    message: string;
+    serverError?: ServerError;
+    users?: User[];
+}
+
+interface UserAPIGetRequest {
+    user_id: string;
+}
+interface UserAPIGetResponse {
+    code: number;
+    message: string;
+    serverError?: ServerError;
+    user?: User;
+}
+
+interface UserAPICreateRequest {
+    user: User;
+}
+interface UserAPICreateResponse {
+    code: number;
+    message: string;
+    serverError?: ServerError;
+    user?: User;
+}
+
+interface UserAPIUpdateRequest {
+    user: User;
+}
+interface UserAPIUpdateResponse {
+    code: number;
+    message: string;
+    serverError?: ServerError;
+    user?: User;
+}
+
+export {
+    teamViewerUserAPI,
+    UserAPIListRequest,
+    UserAPIListResponse,
+    UserAPIGetRequest,
+    UserAPIGetResponse,
+    UserAPICreateRequest,
+    UserAPICreateResponse,
+    UserAPIUpdateRequest,
+    UserAPIUpdateResponse,
 }
