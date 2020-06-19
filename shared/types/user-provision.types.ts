@@ -10,8 +10,6 @@ interface UserProvisionFunctionCallbackMessage {}
 interface UserProvisionFunctionInvocationEvent {}
 
 interface UserProvisionFunctionRequestPayload {
-    readonly name: string;
-    readonly email: string;
     readonly group: Group;
     readonly user: User;
 }

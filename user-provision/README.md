@@ -7,8 +7,6 @@
 ```
 {
     "payload": {
-      "name": string;
-      "email": string;
       "group": Group;
       "user": User;
     }
