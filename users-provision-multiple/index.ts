@@ -7,7 +7,7 @@ import { User, Group } from "../shared/teamViewerTypes";
 import { UsersProvisionMultipleFunctionRequest, UsersProvisionMultipleFunctionRequestPayload } from "../shared/types/users-provision-multiple.types";
 import { UserProvisionFunctionRequest, UserProvisionFunctionRequestPayload } from "../shared/types/user-provision.types";
 
-const usersProvisionMultiple: AzureFunction = async function (context: Context, triggerMessage: UsersProvisionMultipleFunctionRequest): Promise<void> {
+const usersProvisionMultiple: AzureFunction = async function (context: Context, triggerMessage: any): Promise<void> {
     const functionInvocationID = context.executionContext.invocationId;
     const functionInvocationTime = new Date();
     const functionInvocationTimestamp = functionInvocationTime.toJSON();  // format: 2012-04-23T18:25:43.511Z
@@ -29,8 +29,8 @@ const usersProvisionMultiple: AzureFunction = async function (context: Context, 
     const allGroups = context.bindings.allGroups;
     const allUsers = context.bindings.allUsers;
 
-    const triggerObject = triggerMessage as UsersProvisionMultipleFunctionRequest;
-    const payload = triggerObject.payload as UsersProvisionMultipleFunctionRequestPayload;
+    const triggerObject = context.bindings.triggerMessage;
+    const payload = triggerObject.payload;
 
     let sortedGroups = {};
     let sortedUsers = {};
