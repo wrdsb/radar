@@ -70,19 +70,19 @@ class teamViewerUserAPI {
     }
     
     // PUT /users/{id}
-    public async update(user: User): Promise<UserAPIUpdateResponse> {
-        try {
-            const response = await this.api.put(`/users/${user.id}`, user);
-            const data = response.data;
-            return data;
-        } catch (err) {
-            if (err && err.response) {
-                const axiosError = err as AxiosError<ServerError>
-                return axiosError.response.data;
-            }
-            throw err;
-        }
-    }
+    //public async update(user: User): Promise<UserAPIUpdateResponse> {
+        //try {
+            //const response = await this.api.put(`/users/${user.id}`, user);
+            //const data = response.data;
+            //return data;
+        //} catch (err) {
+            //if (err && err.response) {
+                //const axiosError = err as AxiosError<ServerError>
+                //return axiosError.response.data;
+            //}
+            //throw err;
+        //}
+    //}
 }
 
 type UserAPIListRequest = {}

@@ -31,7 +31,8 @@ const userUpdate: AzureFunction = async function (context: Context, triggerMessa
     const triggerObject = context.bindings.triggerMessage;
     const payload = triggerObject.payload;
 
-    let result = await apiClient.update(payload);
+    //let result = await apiClient.update(payload);
+    let result = {};
 
     const logPayload = result;
     context.log(logPayload);
