@@ -33,6 +33,7 @@ const userCreate: AzureFunction = async function (context: Context, triggerMessa
     const request = payload;
 
     let result = await apiClient.create(request);
+    result.user['email'] = payload.email;
 
     context.bindings.cosmosDocument = result.user;
 
